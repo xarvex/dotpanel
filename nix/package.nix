@@ -3,6 +3,7 @@
   gobject-introspection,
   gtk4,
   gtk4-layer-shell,
+  lib,
   libportal-gtk4,
   meson,
   networkmanager,
@@ -50,4 +51,13 @@ stdenv.mkDerivation {
       tray
       wireplumber
     ]);
+
+  meta = {
+    description = "dotpanel";
+    homepage = "https://codeberg.org/xarvex/dotpanel";
+    license = lib.licenses.mit;
+    maintainers = with lib.maintainers; [ xarvex ];
+    mainProgram = "dotpanel";
+    platforms = lib.platforms.linux;
+  };
 }
