@@ -38,11 +38,19 @@
         border-color: #{"alpha(mix(black, @headerbar_darker_shade_color, 0.4), 1)"};
       }
 
-      &.active {
-        border-color: #{"alpha(@accent_bg_color, 1)"};
+      &.visible {
+        border-color: #{"alpha(@accent_bg_color, 0.625)"};
 
         &.occupied {
           background-color: #{"alpha(@accent_bg_color, 0.375)"};
+        }
+
+        &.active {
+          border-color: #{"alpha(@accent_bg_color, 1)"};
+
+          &.occupied {
+            background-color: #{"alpha(@accent_bg_color, 0.5)"};
+          }
         }
       }
     }

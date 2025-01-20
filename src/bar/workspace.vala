@@ -10,17 +10,35 @@ public class Dotpanel.WorkspaceBarModule : Dotpanel.BarModule {
             this.hyprland = hyprland;
             dummy_workspace = new AstalHyprland.Workspace.dummy(number, null);
 
-            foreach (var monitor in hyprland.monitors)
+            foreach (var monitor in hyprland.monitors) {
+                var visible = number == monitor.active_workspace.id;
+
+                if (visible) add_css_class("visible");
+
+                // NOTE: Logic cannot be combined as that may create a race condition.
                 if (monitor.name == monitor_connector) {
-                    if (number == monitor.active_workspace.id) add_css_class("active");
+                    if (visible) add_css_class("active");
                     monitor.notify.connect(
                         spec => {
                             if (spec.name == "active-workspace") {
-                                if (number == monitor.active_workspace.id) add_css_class("active");
-                                else remove_css_class("active");
+                                if (number == monitor.active_workspace.id) {
+                                    add_css_class("visible");
+                                    add_css_class("active");
+                                } else if (has_css_class("active")) {
+                                    remove_css_class("visible");
+                                    remove_css_class("active");
+                                }
                             }
                         });
-                }
+                } else
+                    monitor.notify.connect(
+                        spec => {
+                            if (spec.name == "active-workspace") {
+                                if (number == monitor.active_workspace.id) add_css_class("visible");
+                                else if (!has_css_class("active")) remove_css_class("visible");
+                            }
+                        });
+            }
 
             hyprland.workspace_added.connect(
                 workspace => {
