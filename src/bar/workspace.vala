@@ -6,18 +6,21 @@ public class Dotpanel.WorkspaceBarModule : Dotpanel.BarModule {
         private AstalHyprland.Hyprland hyprland;
         private AstalHyprland.Workspace dummy_workspace;
 
-        public WorkspaceButton(int number, AstalHyprland.Hyprland hyprland) {
+        public WorkspaceButton(int number, string monitor_connector, AstalHyprland.Hyprland hyprland) {
             this.hyprland = hyprland;
             dummy_workspace = new AstalHyprland.Workspace.dummy(number, null);
 
-            if (number == hyprland.focused_workspace.id) add_css_class("focused");
-            hyprland.notify.connect(
-                spec => {
-                    if (spec.name == "focused-workspace") {
-                        if (number == hyprland.focused_workspace.id) add_css_class("focused");
-                        else remove_css_class("focused");
-                    }
-                });
+            foreach (var monitor in hyprland.monitors)
+                if (monitor.name == monitor_connector) {
+                    if (number == monitor.active_workspace.id) add_css_class("active");
+                    monitor.notify.connect(
+                        spec => {
+                            if (spec.name == "active-workspace") {
+                                if (number == monitor.active_workspace.id) add_css_class("active");
+                                else remove_css_class("active");
+                            }
+                        });
+                }
 
             hyprland.workspace_added.connect(
                 workspace => {
@@ -59,7 +62,7 @@ public class Dotpanel.WorkspaceBarModule : Dotpanel.BarModule {
         }
     }
 
-    construct {
-        for (var i = 1; i <= 10; i++) append(new WorkspaceButton(i, AstalHyprland.get_default()));
+    public WorkspaceBarModule(string monitor_connector) {
+        for (var i = 1; i <= 10; i++) append(new WorkspaceButton(i, monitor_connector, AstalHyprland.get_default()));
     }
 }

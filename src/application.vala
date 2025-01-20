@@ -23,7 +23,7 @@ class Dotpanel.Application : Astal.Application {
         // HACK: Must be able to override things such as background. I am the user now.
         Gtk.StyleContext.add_provider_for_display(display, css_provider, Gtk.STYLE_PROVIDER_PRIORITY_USER + 1);
 
-        foreach (var monitor in this.monitors) {
+        foreach (var monitor in monitors) {
             var bar = new Dotpanel.Bar(monitor);
             bar.present();
         }
