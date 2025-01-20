@@ -34,7 +34,7 @@
       margin: 0 0.375rem 0 0.375rem;
 
       &.occupied {
-        background-color: #{"mix(white, alpha(@card_bg_color, 1), 0.9375)"};
+        background-color: #{"mix(white, alpha(@card_bg_color, 1), 0.9125)"};
         border-color: #{"mix(black, alpha(@headerbar_darker_shade_color, 1), 0.4)"};
       }
 
