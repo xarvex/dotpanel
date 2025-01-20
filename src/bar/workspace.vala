@@ -24,8 +24,8 @@ public class Dotpanel.WorkspaceBarModule : Dotpanel.BarModule {
                     if (number == workspace.id) monitor_clients(workspace);
                 });
             var workspace = hyprland.get_workspace(number);
-            if ((workspace != null) && (workspace.clients.length() > 0)) {
-                add_css_class("occupied");
+            if (workspace != null) {
+                if (workspace.clients.length() > 0) add_css_class("occupied");
                 monitor_clients(workspace);
             }
         }
