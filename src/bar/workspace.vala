@@ -1,4 +1,4 @@
-public class Dotpanel.WorkspaceBarModule : Astal.Box {
+public class Dotpanel.WorkspaceBarModule : Dotpanel.BarModule {
     private class WorkspaceButton : Astal.Box {
         private Gtk.GestureClick left_click = new Gtk.GestureClick();
         private Gtk.GestureClick right_click = new Gtk.GestureClick();
@@ -60,11 +60,6 @@ public class Dotpanel.WorkspaceBarModule : Astal.Box {
     }
 
     construct {
-        add_css_class("bar-widget-module");
-
-        margin_start = 6;
-        margin_end = 6;
-
         for (var i = 1; i <= 10; i++) append(new WorkspaceButton(i, AstalHyprland.get_default()));
     }
 }

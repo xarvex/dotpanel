@@ -1,4 +1,4 @@
-public class Dotpanel.TimeBarModule : Astal.Box {
+public class Dotpanel.TimeBarModule : Dotpanel.BarModule {
     private AstalIO.Time interval = AstalIO.Time.interval(1000, null);
 
     private Gtk.Label clock_icon = new Gtk.Label(null);
@@ -48,11 +48,6 @@ public class Dotpanel.TimeBarModule : Astal.Box {
     }
 
     construct {
-        add_css_class("bar-widget-module");
-
-        margin_start = 6;
-        margin_end = 6;
-
         clock_icon.add_css_class("time");
         clock_time.add_css_class("time");
 
