@@ -1,0 +1,7 @@
+@use "sass:meta";
+
+@include meta.load-css("bar");
+
+* {
+  font-family: "sans-serif";
+}
