@@ -30,7 +30,12 @@
   };
 
   outputs =
-    inputs@{ flake-parts, nixpkgs, ... }:
+    inputs@{
+      flake-parts,
+      nixpkgs,
+      self,
+      ...
+    }:
     let
       inherit (nixpkgs) lib;
     in
@@ -54,5 +59,10 @@
 
           formatter = pkgs.nixfmt-rfc-style;
         };
+
+      flake.homeManagerModules = rec {
+        default = dotpanel;
+        dotpanel = import ./nix/home-manager.nix { inherit self; };
+      };
     };
 }
