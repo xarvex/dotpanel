@@ -28,10 +28,7 @@ class Dotpanel.Bar : Astal.Window {
     construct {
         add_css_class("bar");
 
-        margin_bottom = 0;
-        margin_left = 6;
-        margin_right = 6;
-        margin_top = 6;
+        margin_top = 4;
 
         application = Dotpanel.Application.instance;
 
