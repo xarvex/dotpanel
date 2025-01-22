@@ -6,58 +6,36 @@ public class Dotpanel.WorkspaceBarModule : Dotpanel.BarModule {
         private AstalHyprland.Hyprland hyprland;
         private AstalHyprland.Workspace dummy_workspace;
 
-        public WorkspaceButton(int number, string monitor_connector, AstalHyprland.Hyprland hyprland) {
+        public WorkspaceButton(int number, AstalHyprland.Hyprland hyprland) {
             this.hyprland = hyprland;
             dummy_workspace = new AstalHyprland.Workspace.dummy(number, null);
 
-            foreach (var monitor in hyprland.monitors) {
-                var visible = number == monitor.active_workspace.id;
+            set_workspace(hyprland.get_workspace(number));
+        }
 
-                if (visible) add_css_class("visible");
-
-                // NOTE: Logic cannot be combined as that may create a race condition.
-                if (monitor.name == monitor_connector) {
-                    if (visible) add_css_class("active");
-                    monitor.notify.connect(
-                        spec => {
-                            if (spec.name == "active-workspace") {
-                                if (number == monitor.active_workspace.id) {
-                                    add_css_class("visible");
-                                    add_css_class("active");
-                                } else if (has_css_class("active")) {
-                                    remove_css_class("visible");
-                                    remove_css_class("active");
-                                }
-                            }
-                        });
-                } else
-                    monitor.notify.connect(
-                        spec => {
-                            if (spec.name == "active-workspace") {
-                                if (number == monitor.active_workspace.id) add_css_class("visible");
-                                else if (!has_css_class("active")) remove_css_class("visible");
-                            }
-                        });
-            }
-
-            hyprland.workspace_added.connect(
-                workspace => {
-                    if (number == workspace.id) monitor_clients(workspace);
-                });
-            var workspace = hyprland.get_workspace(number);
-            if (workspace != null) {
-                if (workspace.clients.length() > 0) add_css_class("occupied");
-                monitor_clients(workspace);
+        public void set_monitor(AstalHyprland.Monitor? monitor, bool active = false) {
+            if (monitor == null) {
+                remove_css_class("visible");
+                remove_css_class("active");
+            } else {
+                add_css_class("visible");
+                if (active) add_css_class("active");
+                else remove_css_class("active");
             }
         }
 
-        private void monitor_clients(AstalHyprland.Workspace workspace) {
-            workspace.notify.connect(
-                () => {
-                    if (workspace.clients.length() > 0) add_css_class("occupied");
-                    else remove_css_class("occupied");
-                });
-            workspace.removed.connect(() => remove_css_class("occupied"));
+        public void set_workspace(AstalHyprland.Workspace? workspace) {
+            if (workspace == null) remove_css_class("occupied");
+            else {
+                if (workspace.clients.length() > 0) add_css_class("occupied");
+                workspace.notify.connect(
+                    spec => {
+                        if (spec.name == "clients") {
+                            if (workspace.clients.length() > 0) add_css_class("occupied");
+                            else remove_css_class("occupied");
+                        }
+                    });
+            }
         }
 
         construct {
@@ -65,7 +43,6 @@ public class Dotpanel.WorkspaceBarModule : Dotpanel.BarModule {
 
             halign = Gtk.Align.CENTER;
             valign = Gtk.Align.CENTER;
-            vexpand = false;
 
             left_click.set_button(Gdk.BUTTON_PRIMARY);
             left_click.pressed.connect(() => dummy_workspace.focus());
@@ -80,7 +57,67 @@ public class Dotpanel.WorkspaceBarModule : Dotpanel.BarModule {
         }
     }
 
+    private GLib.List<int> monitor_buttons = new GLib.List<int>();
+    private WorkspaceButton[] buttons = new WorkspaceButton[10];
+    private string monitor_connector;
+
     public WorkspaceBarModule(string monitor_connector) {
-        for (var i = 1; i <= 10; i++) append(new WorkspaceButton(i, monitor_connector, AstalHyprland.get_default()));
+        this.monitor_connector = monitor_connector;
+
+        var hyprland = AstalHyprland.get_default();
+
+        for (var i = 0; i < buttons.length; i++) {
+            var button = new WorkspaceButton(i + 1, hyprland);
+            buttons[i] = button;
+            append(button);
+        }
+
+        hyprland.workspace_added.connect(
+            workspace => {
+                var index = workspace.id - 1;
+                if ((index >= 0) && (index < buttons.length)) buttons[index].set_workspace(workspace);
+            });
+        hyprland.workspace_removed.connect(
+            id => {
+                var index = id - 1;
+                if ((index >= 0) && (index < buttons.length)) buttons[index].set_workspace(null);
+            });
+
+        foreach (var monitor in hyprland.monitors) check_monitor(monitor);
+        hyprland.monitor_added.connect(check_monitor);
+        hyprland.monitor_removed.connect(id => unset_monitor(id, true));
+    }
+
+    private void set_monitor(AstalHyprland.Monitor monitor, bool active) {
+        var index = monitor.active_workspace.id - 1;
+
+        if ((index >= 0) && (index < buttons.length)) {
+            monitor_buttons.insert(index, monitor.id);
+            buttons[index].set_monitor(monitor, active);
+        } else monitor_buttons.remove(monitor.id);
+    }
+
+    private void unset_monitor(int id, bool always_remove = true) {
+        var index = monitor_buttons.nth_data(id);
+        var inside_bounds = (index >= 0) && (index < buttons.length);
+
+        if (inside_bounds) buttons[index].set_monitor(null);
+        if (!inside_bounds || always_remove) monitor_buttons.remove(id);
+    }
+
+    private void check_monitor(AstalHyprland.Monitor monitor) {
+        var active = monitor.name == monitor_connector;
+
+        if (monitor.active_workspace != null) set_monitor(monitor, active);
+
+        monitor.notify.connect(
+            spec => {
+                if ((spec.name == "active-workspace"))
+                    if (monitor.active_workspace == null) unset_monitor(monitor.id, true);
+                    else {
+                        unset_monitor(monitor.id);
+                        set_monitor(monitor, active);
+                    }
+            });
     }
 }

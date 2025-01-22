@@ -27,6 +27,22 @@ class Dotpanel.Application : Astal.Application {
             var bar = new Dotpanel.Bar(monitor);
             bar.present();
         }
+
+        var monitors = display.get_monitors();
+        display.get_monitors().items_changed.connect(
+            (position, removed, added) => {
+                if (added > removed) {
+                    display.sync();
+                    for (var i = 0; i < added; i++) {
+                        var monitor = monitors.get_item(position + i);
+                        if (monitor != null) {
+                            var mon = (Gdk.Monitor) monitor;
+                            var bar = new Dotpanel.Bar(mon);
+                            bar.present();
+                        }
+                    }
+                }
+            });
     }
 
     construct {
