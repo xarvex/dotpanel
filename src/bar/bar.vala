@@ -31,6 +31,7 @@ class Dotpanel.Bar : Astal.Window {
         margin_top = 4;
 
         application = Dotpanel.Application.instance;
+        namespace = "dotpanel-bar";
 
         anchor = Astal.WindowAnchor.TOP
             | Astal.WindowAnchor.LEFT
