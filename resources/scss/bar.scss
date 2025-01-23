@@ -1,18 +1,11 @@
 .bar {
   background: transparent;
 
-  .bar-widget-module {
+  .bar-module {
     background: #{"@window_bg_color"};
     border-color: #{"alpha(@accent_bg_color, 1)"};
 
     padding: 0.375rem;
-
-    border-style: solid;
-    border-radius: 1.1875rem;
-    border-width: 0.1875rem;
-
-    margin-bottom: 0.1875rem;
-    margin-top: 0.1875rem;
 
     .time {
       font-family: "monospace";
