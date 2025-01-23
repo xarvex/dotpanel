@@ -11,10 +11,10 @@ class Dotpanel.Application : Astal.Application {
         var display = Gdk.Display.get_default();
 
         var icon_theme = Gtk.IconTheme.get_for_display(display);
-        icon_theme.add_resource_path("/com/gitlab/xarvex/dotfyls/dotpanel/icons");
+        icon_theme.add_resource_path("/org/codeberg/xarvex/dotpanel/icons");
 
         var css_provider = new Gtk.CssProvider();
-        css_provider.load_from_resource("/com/gitlab/xarvex/dotfyls/dotpanel/style.css");
+        css_provider.load_from_resource("/org/codeberg/xarvex/dotpanel/style.css");
 
         // INFO: Not actually deprecated, bindings issue. Static methods are fine.
         // See: https://discourse.gnome.org/t/what-good-is-gtkcssprovider-without-gtkstylecontext/12621/2
