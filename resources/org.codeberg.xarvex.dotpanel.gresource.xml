@@ -2,5 +2,7 @@
 <gresources>
     <gresource prefix="/org/codeberg/xarvex/dotpanel">
         <file>style.css</file>
+
+        <file compressed="true">icons/symbolic/apps/linux-nixos-symbolic.svg</file>
     </gresource>
 </gresources>
