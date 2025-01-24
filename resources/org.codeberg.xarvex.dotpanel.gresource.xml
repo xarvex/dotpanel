@@ -4,5 +4,6 @@
         <file>style.css</file>
 
         <file compressed="true">icons/symbolic/apps/linux-nixos-symbolic.svg</file>
+        <file compressed="true">icons/symbolic/apps/power-settings-symbolic.svg</file>
     </gresource>
 </gresources>

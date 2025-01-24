@@ -13,6 +13,7 @@ class Dotpanel.Bar : Astal.Window {
         start_widget.append(new Dotpanel.HostBarModule());
 
         end_widget.append(new Dotpanel.TimeBarModule());
+        end_widget.append(new Dotpanel.PowerBarModule());
 
         center_box.start_widget = start_widget;
         center_box.center_widget = center_widget;
