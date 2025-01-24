@@ -28,13 +28,12 @@ public class Dotpanel.WorkspaceBarModule : Dotpanel.BarModule {
             if (workspace == null) remove_css_class("occupied");
             else {
                 if (workspace.clients.length() > 0) add_css_class("occupied");
-                workspace.notify.connect(
-                    spec => {
-                        if (spec.name == "clients") {
-                            if (workspace.clients.length() > 0) add_css_class("occupied");
-                            else remove_css_class("occupied");
-                        }
-                    });
+                workspace.notify.connect(spec => {
+                    if (spec.name == "clients") {
+                        if (workspace.clients.length() > 0) add_css_class("occupied");
+                        else remove_css_class("occupied");
+                    }
+                });
             }
         }
 
@@ -47,11 +46,10 @@ public class Dotpanel.WorkspaceBarModule : Dotpanel.BarModule {
             left_click.set_button(Gdk.BUTTON_PRIMARY);
             left_click.pressed.connect(() => dummy_workspace.focus());
             right_click.set_button(Gdk.BUTTON_SECONDARY);
-            right_click.pressed.connect(
-                () => {
-                    var client = hyprland.focused_client;
-                    if (client != null) client.move_to(dummy_workspace);
-                });
+            right_click.pressed.connect(() => {
+                var client = hyprland.focused_client;
+                if (client != null) client.move_to(dummy_workspace);
+            });
             add_controller(left_click);
             add_controller(right_click);
         }
@@ -72,16 +70,14 @@ public class Dotpanel.WorkspaceBarModule : Dotpanel.BarModule {
             append(button);
         }
 
-        hyprland.workspace_added.connect(
-            workspace => {
-                var index = workspace.id - 1;
-                if ((index >= 0) && (index < buttons.length)) buttons[index].set_workspace(workspace);
-            });
-        hyprland.workspace_removed.connect(
-            id => {
-                var index = id - 1;
-                if ((index >= 0) && (index < buttons.length)) buttons[index].set_workspace(null);
-            });
+        hyprland.workspace_added.connect(workspace => {
+            var index = workspace.id - 1;
+            if ((index >= 0) && (index < buttons.length)) buttons[index].set_workspace(workspace);
+        });
+        hyprland.workspace_removed.connect(id => {
+            var index = id - 1;
+            if ((index >= 0) && (index < buttons.length)) buttons[index].set_workspace(null);
+        });
 
         foreach (var monitor in hyprland.monitors) check_monitor(monitor);
         hyprland.monitor_added.connect(check_monitor);
@@ -110,14 +106,14 @@ public class Dotpanel.WorkspaceBarModule : Dotpanel.BarModule {
 
         if (monitor.active_workspace != null) set_monitor(monitor, active);
 
-        monitor.notify.connect(
-            spec => {
-                if ((spec.name == "active-workspace"))
-                    if (monitor.active_workspace == null) unset_monitor(monitor.id, true);
-                    else {
-                        unset_monitor(monitor.id);
-                        set_monitor(monitor, active);
-                    }
-            });
+        monitor.notify.connect(spec => {
+            if ((spec.name == "active-workspace")) {
+                if (monitor.active_workspace == null) unset_monitor(monitor.id, true);
+                else {
+                    unset_monitor(monitor.id);
+                    set_monitor(monitor, active);
+                }
+            }
+        });
     }
 }
