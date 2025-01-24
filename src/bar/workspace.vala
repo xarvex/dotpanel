@@ -1,10 +1,10 @@
 public class Dotpanel.WorkspaceBarModule : Dotpanel.BarModule {
     private class WorkspaceButton : Astal.Box {
-        private Gtk.GestureClick left_click = new Gtk.GestureClick();
-        private Gtk.GestureClick right_click = new Gtk.GestureClick();
-
         private AstalHyprland.Hyprland hyprland;
         private AstalHyprland.Workspace dummy_workspace;
+
+        private Gtk.GestureClick left_click = new Gtk.GestureClick();
+        private Gtk.GestureClick right_click = new Gtk.GestureClick();
 
         public WorkspaceButton(int number, AstalHyprland.Hyprland hyprland) {
             this.hyprland = hyprland;
