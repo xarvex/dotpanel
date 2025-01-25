@@ -15,23 +15,23 @@ public class Dotpanel.WorkspaceBarModule : Dotpanel.BarModule {
 
         public void set_monitor(AstalHyprland.Monitor? monitor, bool active = false) {
             if (monitor == null) {
-                remove_css_class("visible");
-                remove_css_class("active");
+                remove_css_class("workspace-visible");
+                remove_css_class("workspace-active");
             } else {
-                add_css_class("visible");
-                if (active) add_css_class("active");
-                else remove_css_class("active");
+                add_css_class("workspace-visible");
+                if (active) add_css_class("workspace-active");
+                else remove_css_class("workspace-active");
             }
         }
 
         public void set_workspace(AstalHyprland.Workspace? workspace) {
-            if (workspace == null) remove_css_class("occupied");
+            if (workspace == null) remove_css_class("workspace-occupied");
             else {
-                if (workspace.clients.length() > 0) add_css_class("occupied");
+                if (workspace.clients.length() > 0) add_css_class("workspace-occupied");
                 workspace.notify.connect(spec => {
                     if (spec.name == "clients") {
-                        if (workspace.clients.length() > 0) add_css_class("occupied");
-                        else remove_css_class("occupied");
+                        if (workspace.clients.length() > 0) add_css_class("workspace-occupied");
+                        else remove_css_class("workspace-occupied");
                     }
                 });
             }

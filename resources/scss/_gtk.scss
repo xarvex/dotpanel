@@ -1,0 +1,29 @@
+// See: https://docs.gtk.org/gtk4/css-properties.html#non-css-colors
+
+@use 'sass:string';
+
+// Produces a brighter variant of color.
+@function lighter($color) {
+  @return string.unquote("lighter(#{$color})");
+}
+
+// Produces a darker variant of color.
+@function darker($color) {
+  @return string.unquote("darker(#{$color})");
+}
+
+// Changes the lightness of color.
+// The number ranges from 0 for black to 2 for white.
+@function shade($color, $number) {
+  @return string.unquote("shade(#{$color}, #{$number})");
+}
+
+// Multiplies the alpha value of color by number (between 0 and 1).
+@function alpha($color, $number) {
+  @return string.unquote("alpha(#{$color}, #{$number})");
+}
+
+// Interpolates between the two colors.
+@function mix($color1, $color2, $number) {
+  @return string.unquote("mix(#{$color1}, #{$color2}, #{$number})");
+}

@@ -4,6 +4,7 @@
   gtk4,
   gtk4-layer-shell,
   lib,
+  libadwaita,
   libportal-gtk4,
   meson,
   networkmanager,
@@ -36,6 +37,7 @@ stdenv.mkDerivation {
     [
       gtk4
       gtk4-layer-shell
+      libadwaita
       libportal-gtk4
       networkmanager
     ]
@@ -43,6 +45,7 @@ stdenv.mkDerivation {
       astal4
       apps
       battery
+      bluetooth
       hyprland
       io
       mpris

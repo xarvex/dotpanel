@@ -4,6 +4,9 @@ scss = custom_target(
   output: 'style.css',
   command: [find_program('sass'), '@INPUT@', '@OUTPUT@'],
   depend_files: files(
-    'bar.scss',
+    '_adw.scss',
+    '_bar.scss',
+    '_components.scss',
+    '_gtk.scss',
   ),
 )

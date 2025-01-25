@@ -1,19 +1,6 @@
-@use "sass:meta";
-
-@include meta.load-css("bar");
+@use 'bar';
+@use 'components';
 
 * {
-  color: #{"alpha(@window_fg_color, 1)"};
-
   font-family: "sans-serif";
-}
-
-.accented {
-  color: #{"alpha(@accent_bg_color, 1)"};
-}
-
-.boxlike {
-  border-radius: 8px;
-
-  margin: 4px;
 }

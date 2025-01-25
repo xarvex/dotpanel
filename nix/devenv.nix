@@ -27,6 +27,7 @@
       gobject-introspection
       gtk4
       gtk4-layer-shell
+      libadwaita
       libportal-gtk4
       meson
       networkmanager
@@ -35,9 +36,10 @@
       wrapGAppsHook4
     ])
     ++ (with inputs.astal.packages.${pkgs.system}; [
-      apps
       astal4
+      apps
       battery
+      bluetooth
       hyprland
       io
       mpris

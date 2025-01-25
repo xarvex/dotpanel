@@ -16,13 +16,16 @@ sources = []
 subdir('resources')
 subdir('src')
 
+c = meson.get_compiler('c')
+
 dependencies = [
-  dependency('gio-2.0'),
+  c.find_library('m', required: false),
   dependency('gio-unix-2.0'),
   dependency('glib-2.0'),
   dependency('gobject-2.0'),
   dependency('gtk4'),
   dependency('gtk4-layer-shell-0'),
+  dependency('libadwaita-1'),
   dependency('libnm'),
   dependency('libportal'),
   dependency('astal-4-4.0'),

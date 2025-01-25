@@ -1,0 +1,64 @@
+@use 'sass:math';
+
+@use 'adw';
+@use 'gtk';
+
+.bar {
+  background: transparent;
+
+  .spaced * {
+    margin: 0 0.25rem 0 0.25rem;
+  }
+
+  .bar-module {
+    background-color: adw.$window-bg-color;
+    border-color: adw.$accent-color;
+
+    padding: 0.25rem;
+
+    .indicator-icon {
+      -gtk-icon-size: 1.25rem;
+    }
+
+    .fullsize-icon {
+      -gtk-icon-size: 1.5rem;
+    }
+
+    .workspace {
+      background-color: transparent;
+      border-color: gtk.alpha(adw.$dark-5, 0.625);
+
+      min-height: 0.375rem;
+      min-width: 0.375rem;
+
+      padding: 0.25rem;
+
+      border-style: solid;
+      border-radius: 1rem;
+      border-width: 0.125rem;
+
+      margin: 0 0.375rem 0 0.375rem;
+
+      &.workspace-occupied {
+        background-color: gtk.alpha(adw.$light-1, 0.1875);
+        border-color: gtk.alpha(adw.$dark-5, 0.75);
+      }
+
+      &.workspace-visible {
+        border-color: gtk.mix(adw.$accent-color, adw.$dark-5, 0.375);
+
+        &.workspace-occupied {
+          background-color: gtk.alpha(adw.$accent-color, 0.375);
+        }
+
+        &.workspace-active {
+          border-color: adw.$accent-color;
+
+          &.workspace-occupied {
+            background-color: gtk.alpha(adw.$accent-color, 0.5);
+          }
+        }
+      }
+    }
+  }
+}

@@ -48,12 +48,13 @@ public class Dotpanel.TimeBarModule : Dotpanel.BarModule {
     }
 
     construct {
-        icon.add_css_class("time");
-        clock.add_css_class("time");
+        add_css_class("spaced");
+        icon.add_css_class("monospaced");
+        clock.add_css_class("monospaced");
+
+        interval.now.connect(sync);
 
         append(icon);
         append(clock);
-
-        interval.now.connect(sync);
     }
 }
