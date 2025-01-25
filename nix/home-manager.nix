@@ -27,7 +27,7 @@ in
       };
 
       Service = {
-        ExecStart = lib.getExe cfg.package;
+        ExecStart = "${lib.getExe cfg.package} --daemon";
         Restart = "on-failure";
       };
 

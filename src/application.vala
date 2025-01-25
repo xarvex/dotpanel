@@ -46,13 +46,6 @@ class Dotpanel.Application : Astal.Application {
 
     construct {
         instance_name = "dotpanel";
-
-        try {
-            acquire_socket();
-        } catch (Error e) {
-            printerr("%s", e.message);
-        }
-
         instance = this;
     }
 }
