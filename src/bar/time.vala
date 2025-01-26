@@ -5,7 +5,7 @@ public class Dotpanel.TimeBarModule : Dotpanel.BarModule {
     private Gtk.Label clock = new Gtk.Label(null);
 
     private void sync() {
-        var now = new GLib.DateTime.now_local();
+        var now = new DateTime.now_local();
 
         switch (now.get_hour()) {
         case 0:
