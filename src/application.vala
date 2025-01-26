@@ -23,10 +23,7 @@ class Dotpanel.Application : Astal.Application {
         // HACK: Must be able to override things such as background. I am the user now.
         Gtk.StyleContext.add_provider_for_display(display, css_provider, Gtk.STYLE_PROVIDER_PRIORITY_USER + 1);
 
-        foreach (var monitor in monitors) {
-            var bar = new Dotpanel.Bar(monitor);
-            bar.present();
-        }
+        foreach (var monitor in monitors) present_monitor(monitor);
 
         var monitors = display.get_monitors();
         display.get_monitors().items_changed.connect((position, removed, added) => {
@@ -34,14 +31,16 @@ class Dotpanel.Application : Astal.Application {
                 display.sync();
                 for (var i = 0; i < added; i++) {
                     var monitor = monitors.get_item(position + i);
-                    if (monitor != null) {
-                        var mon = (Gdk.Monitor) monitor;
-                        var bar = new Dotpanel.Bar(mon);
-                        bar.present();
-                    }
+                    if (monitor != null) present_monitor((Gdk.Monitor) monitor);
                 }
             }
         });
+    }
+
+    private void present_monitor(Gdk.Monitor monitor) {
+        var bar = new Dotpanel.Bar(monitor);
+
+        bar.present();
     }
 
     construct {
