@@ -13,14 +13,14 @@ public class Dotpanel.WorkspaceBarModule : Dotpanel.BarModule {
             set_workspace(hyprland.get_workspace(number));
         }
 
-        public void set_monitor(AstalHyprland.Monitor? monitor, bool active = false) {
-            if (monitor == null) {
-                remove_css_class("workspace-visible");
-                remove_css_class("workspace-active");
-            } else {
+        public void set_monitor_state(bool state, bool active = false) {
+            if (state) {
                 add_css_class("workspace-visible");
                 if (active) add_css_class("workspace-active");
                 else remove_css_class("workspace-active");
+            } else {
+                remove_css_class("workspace-visible");
+                remove_css_class("workspace-active");
             }
         }
 
@@ -28,8 +28,8 @@ public class Dotpanel.WorkspaceBarModule : Dotpanel.BarModule {
             if (workspace == null) remove_css_class("workspace-occupied");
             else {
                 if (workspace.clients.length() > 0) add_css_class("workspace-occupied");
-                workspace.notify.connect(spec => {
-                    if (spec.name == "clients") {
+                workspace.notify.connect(pspec => {
+                    if (pspec.name == "clients") {
                         if (workspace.clients.length() > 0) add_css_class("workspace-occupied");
                         else remove_css_class("workspace-occupied");
                     }
@@ -55,14 +55,15 @@ public class Dotpanel.WorkspaceBarModule : Dotpanel.BarModule {
         }
     }
 
-    private GLib.List<int> monitor_buttons = new GLib.List<int>();
+    private AstalHyprland.Hyprland hyprland;
+
+    private GenericArray<int> monitor_buttons = new GenericArray<int>();
     private WorkspaceButton[] buttons = new WorkspaceButton[10];
     private string monitor_connector;
 
     public WorkspaceBarModule(string monitor_connector) {
+        hyprland = AstalHyprland.get_default();
         this.monitor_connector = monitor_connector;
-
-        var hyprland = AstalHyprland.get_default();
 
         for (var i = 0; i < buttons.length; i++) {
             var button = new WorkspaceButton(i + 1, hyprland);
@@ -79,40 +80,47 @@ public class Dotpanel.WorkspaceBarModule : Dotpanel.BarModule {
             if ((index >= 0) && (index < buttons.length)) buttons[index].set_workspace(null);
         });
 
-        foreach (var monitor in hyprland.monitors) check_monitor(monitor);
-        hyprland.monitor_added.connect(check_monitor);
-        hyprland.monitor_removed.connect(id => unset_monitor(id, true));
+        var monitors = hyprland.monitors.copy();
+        monitors.reverse();
+        foreach (var monitor in monitors)
+            // NOTE: If null, will come through on a monitor_added signal.
+            if (monitor.name != null) check_monitor(monitor);
+
+        hyprland.monitor_added.connect(monitor => {
+            check_monitor(monitor);
+        });
+        hyprland.monitor_removed.connect(id => {
+            unset_monitor(id);
+            monitor_buttons.remove_index(id);
+        });
     }
 
     private void set_monitor(AstalHyprland.Monitor monitor, bool active) {
-        var index = monitor.active_workspace.id - 1;
+        if (monitor.active_workspace == null) monitor_buttons[monitor.id] = -1;
+        else {
+            var index = monitor.active_workspace.id - 1;
 
-        if ((index >= 0) && (index < buttons.length)) {
-            monitor_buttons.insert(index, monitor.id);
-            buttons[index].set_monitor(monitor, active);
-        } else monitor_buttons.remove(monitor.id);
+            monitor_buttons[monitor.id] = index;
+            if ((index >= 0) && (index < buttons.length)) buttons[index].set_monitor_state(true, active);
+        }
     }
 
-    private void unset_monitor(int id, bool always_remove = true) {
-        var index = monitor_buttons.nth_data(id);
-        var inside_bounds = (index >= 0) && (index < buttons.length);
+    private void unset_monitor(int monitor_id) {
+        var index = monitor_buttons[monitor_id];
 
-        if (inside_bounds) buttons[index].set_monitor(null);
-        if (!inside_bounds || always_remove) monitor_buttons.remove(id);
+        if ((index >= 0) && (index < buttons.length)) buttons[index].set_monitor_state(false);
     }
 
     private void check_monitor(AstalHyprland.Monitor monitor) {
-        var active = monitor.name == monitor_connector;
+        monitor_buttons.add(-1);
+        set_monitor(monitor, monitor.name == monitor_connector);
 
-        if (monitor.active_workspace != null) set_monitor(monitor, active);
-
-        monitor.notify.connect(spec => {
-            if ((spec.name == "active-workspace")) {
-                if (monitor.active_workspace == null) unset_monitor(monitor.id, true);
-                else {
-                    unset_monitor(monitor.id);
-                    set_monitor(monitor, active);
-                }
+        // NOTE: Cannot use reference to monitor, will prevent disposal.
+        monitor.notify.connect((gobject, pspec) => {
+            var mon = (AstalHyprland.Monitor) gobject;
+            if ((pspec.name == "active-workspace")) {
+                unset_monitor(mon.id);
+                set_monitor(mon, mon.name == monitor_connector);
             }
         });
     }
