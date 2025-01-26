@@ -15,15 +15,15 @@ public class Dotpanel.BatteryBarModule : Dotpanel.BarModule {
         } else return "<1 min";
     }
 
-    private void sync_icon() {
+    private void update_icon() {
         icon.icon_name = device.battery_icon_name;
     }
 
-    private void sync_percentage() {
+    private void update_percentage() {
         percentage.label = @"$(Math.round(device.percentage * 100).to_string())%";
     }
 
-    private void sync_tooltip() {
+    private void update_tooltip() {
         switch (device.state) {
         case AstalBattery.State.CHARGING:
             if (device.time_to_full > 0) tooltip_markup =
@@ -55,25 +55,25 @@ public class Dotpanel.BatteryBarModule : Dotpanel.BarModule {
         percentage.add_css_class("monospaced");
 
         device = AstalBattery.get_default();
-        device.notify.connect(spec => {
-            switch (spec.name) {
+        device.notify.connect(pspec => {
+            switch (pspec.name) {
                 case "battery-icon-name":
-                    sync_icon();
+                    update_icon();
                     break;
                 case "percentage":
-                    sync_percentage();
+                    update_percentage();
                     break;
                 case "state":
                 case "time-to-empty":
                 case "time-to-full":
-                    sync_tooltip();
+                    update_tooltip();
                     break;
             }
         });
 
-        sync_icon();
-        sync_percentage();
-        sync_tooltip();
+        update_icon();
+        update_percentage();
+        update_tooltip();
 
         append(icon);
         append(percentage);
