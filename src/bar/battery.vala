@@ -18,9 +18,8 @@ public class Dotpanel.BatteryBarModule : Dotpanel.BarModule {
 
         device = AstalBattery.get_default();
         device.notify.connect(spec => {
-            if (spec.name == "percentage") sync_percentage();
-            else print("%s\n", spec.name);
-            sync_icon();
+            if (spec.name == "battery-icon-name") sync_icon();
+            else if (spec.name == "percentage") sync_percentage();
         });
 
         sync_icon();
