@@ -14,7 +14,6 @@ public class Dotpanel.BatteryBarModule : Dotpanel.BarModule {
 
     construct {
         add_css_class("spaced");
-        icon.add_css_class("indicator-icon");
         percentage.add_css_class("monospaced");
 
         device = AstalBattery.get_default();

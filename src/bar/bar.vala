@@ -7,6 +7,7 @@ class Dotpanel.Bar : Astal.Window {
         };
 
         var start_widget = new Astal.Box();
+
         var center_widget = new Dotpanel.WorkspaceBarModule(monitor.connector);
         var end_widget = new Astal.Box();
 
@@ -17,6 +18,7 @@ class Dotpanel.Bar : Astal.Window {
         end_widget.append(new Dotpanel.PowerBarModule());
 
         center_box.start_widget = start_widget;
+
         center_box.center_widget = center_widget;
         center_box.end_widget = end_widget;
 
