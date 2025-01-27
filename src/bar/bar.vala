@@ -12,8 +12,8 @@ class Dotpanel.Bar : Astal.Window {
         var end_widget = new Astal.Box();
 
         start_widget.append(new Dotpanel.HostBarModule());
+        start_widget.append(new Dotpanel.TimeBarModule());
 
-        end_widget.append(new Dotpanel.TimeBarModule());
         end_widget.append(new Dotpanel.BatteryBarModule());
         end_widget.append(new Dotpanel.PowerBarModule());
 
