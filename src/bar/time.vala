@@ -1,7 +1,7 @@
 public class Dotpanel.TimeBarModule : Dotpanel.BarModule {
     private AstalIO.Time interval = AstalIO.Time.interval(1000, null);
 
-    private Gtk.Label icon = new Gtk.Label(null);
+    private Gtk.Image icon = new Gtk.Image();
     private Gtk.Label clock = new Gtk.Label(null);
 
     private void sync() {
@@ -14,14 +14,14 @@ public class Dotpanel.TimeBarModule : Dotpanel.BarModule {
         case 3:
         case 4:
         case 5:
-            icon.label = "󰖔 ";
+            icon.icon_name = "md-weather-night-symbolic";
             break;
         case 6:
         case 7:
         case 8:
         case 9:
         case 10:
-            icon.label = " ";
+            icon.icon_name = "cod-coffee-symbolic";
             break;
         case 11:
         case 12:
@@ -31,16 +31,16 @@ public class Dotpanel.TimeBarModule : Dotpanel.BarModule {
         case 16:
         case 17:
         case 18:
-            icon.label = "󰥟 ";
+            icon.icon_name = "md-window-closed-variant-symbolic";
             break;
         case 19:
         case 20:
         case 21:
-            icon.label = "󰖚 ";
+            icon.icon_name = "md-weather-sunset-symbolic";
             break;
         case 22:
         case 23:
-            icon.label = "󰖔 ";
+            icon.icon_name = "md-weather-night-symbolic";
             break;
         }
 
@@ -49,7 +49,6 @@ public class Dotpanel.TimeBarModule : Dotpanel.BarModule {
 
     construct {
         add_css_class("spaced");
-        icon.add_css_class("monospaced");
         clock.add_css_class("monospaced");
 
         interval.now.connect(sync);

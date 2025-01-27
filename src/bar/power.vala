@@ -5,7 +5,7 @@ public class Dotpanel.PowerBarModule : Dotpanel.BarModule {
         icon.halign = Gtk.Align.CENTER;
         icon.valign = Gtk.Align.CENTER;
 
-        icon.icon_name = "power-settings-symbolic";
+        icon.icon_name = "md-power-settings-symbolic";
 
         append(icon);
     }
