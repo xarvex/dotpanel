@@ -1,0 +1,3 @@
+[submodule "resources/icons/MaterialDesign"]
+	path = resources/icons/MaterialDesign
+	url = https://github.com/Templarian/MaterialDesign.git
