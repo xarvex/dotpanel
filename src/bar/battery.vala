@@ -31,7 +31,7 @@ public class Dotpanel.BatteryBarModule : Dotpanel.BarModule {
             else tooltip_text = "Charging.";
             break;
         case AstalBattery.State.DISCHARGING:
-            if (device.time_to_full > 0) tooltip_markup =
+            if (device.time_to_empty > 0) tooltip_markup =
                     @"Discharging, <b>$(format_time_until(device.time_to_empty))</b> until empty.";
             else tooltip_text = "Discharging.";
             break;
