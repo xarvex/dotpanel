@@ -1,4 +1,4 @@
-class Dotpanel.Bar : Astal.Window {
+public class Dotpanel.Bar : Astal.Window {
     public Bar(Gdk.Monitor monitor) {
         Object(gdkmonitor: monitor);
 
@@ -27,8 +27,6 @@ class Dotpanel.Bar : Astal.Window {
 
     construct {
         add_css_class("bar");
-
-        application = Dotpanel.Application.instance;
 
         // Not having `this` causes formatting to break?
         this.namespace = "dotpanel-bar";

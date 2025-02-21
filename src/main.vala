@@ -1,19 +1,17 @@
 public class Dotpanel.Main {
-    private static bool daemon;
-    private static string request;
+    private static bool stop;
     private static bool inspector;
-    private static bool quit;
+    private static string menu;
 
-    private const OptionEntry[] options = {
-        { "daemon", 0, OptionFlags.NONE, OptionArg.NONE, ref daemon, "Run daemon", null },
+    private const OptionEntry[] OPTIONS = {
+        { "stop", 'q', OptionFlags.NONE, OptionArg.NONE, ref stop, "Stop running instance", null },
         {
-            "inspector", 0, OptionFlags.NONE, OptionArg.NONE, ref inspector, "Open GTK inspector on running instance",
+            "inspector", 'I', OptionFlags.NONE, OptionArg.NONE, ref inspector, "Open GTK inspector on running instance",
             null,
         },
-        { "quit", 'q', OptionFlags.NONE, OptionArg.NONE, ref quit, "Quit running instance", null },
         {
-            "request", 'r', OptionFlags.NONE, OptionArg.STRING, ref request, "Request to running instance",
-            "REQUEST",
+            "menu", 'm', OptionFlags.NONE, OptionArg.STRING, ref menu, "Display a menu",
+            "MENU",
         },
         { null },
     };
@@ -21,7 +19,7 @@ public class Dotpanel.Main {
     public static int main(string[] args) {
         var context = new OptionContext();
 
-        context.add_main_entries(options, null);
+        context.add_main_entries(OPTIONS, null);
         try {
             context.parse(ref args);
         } catch (OptionError e) {
@@ -29,31 +27,29 @@ public class Dotpanel.Main {
             return 1;
         }
 
-        if (quit)
+        if (stop)
             try {
                 AstalIO.quit_instance("dotpanel");
             } catch (Error e) {
                 printerr("%s\n", e.message);
-                if (!daemon || (e.code != DBusError.SERVICE_UNKNOWN)) return 1;
-            }
-
-        if (request != null)
-            try {
-                print("%s\n", AstalIO.send_message("dotpanel", request));
-            } catch (Error e) {
-                printerr("%s\n", e.message);
                 return 1;
             }
-
-        if (inspector)
+        else if (inspector)
             try {
                 AstalIO.open_inspector("dotpanel");
             } catch (Error e) {
                 printerr("%s\n", e.message);
                 return 1;
             }
-
-        if (daemon) {
+        else if (menu != null) {
+            try {
+                var response = AstalIO.send_message("dotpanel", @"menu-$(menu)");
+                if (response != null) print("%s\n", response);
+            } catch (Error e) {
+                printerr("%s\n", e.message);
+                return 1;
+            }
+        } else {
             var app = new Dotpanel.Application();
 
             try {

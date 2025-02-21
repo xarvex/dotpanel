@@ -1,4 +1,10 @@
+@use 'adw';
+@use 'gtk';
+
 .boxlike {
+  background-color: gtk.alpha(adw.$window-bg-color, 0.9);
+  border-color: adw.$accent-color;
+
   border-style: solid;
   border-radius: 8px;
   border-width: 2px;

@@ -1,3 +1,5 @@
+subdir('workspace')
+
 sources += files(
   'bar.vala',
   'battery.vala',
@@ -5,5 +7,4 @@ sources += files(
   'module.vala',
   'power.vala',
   'time.vala',
-  'workspace.vala',
 )

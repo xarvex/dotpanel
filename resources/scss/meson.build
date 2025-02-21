@@ -8,5 +8,6 @@ scss = custom_target(
     '_bar.scss',
     '_components.scss',
     '_gtk.scss',
+    '_menu.scss',
   ),
 )

@@ -1,8 +1,14 @@
-class Dotpanel.Application : Astal.Application {
-    public static Application instance;
+public class Dotpanel.Application : Astal.Application {
+    private static Dotpanel.LauncherMenu? launcher_menu = null;
 
-    public override void request(string msg, SocketConnection conn) {
-        AstalIO.write_sock.begin(conn, @"The response implementation on $(instance_name) is missing");
+    public override void request(string message, SocketConnection connection) {
+        switch (message) {
+        case "menu-launcher" : if (launcher_menu != null) launcher_menu.present();
+            break;
+        default:
+            AstalIO.write_sock.begin(connection, @"The response implementation on $(instance_name) is missing");
+            break;
+        }
     }
 
     public override void activate() {
@@ -23,7 +29,9 @@ class Dotpanel.Application : Astal.Application {
         // HACK: Must be able to override things such as background. I am the user now.
         Gtk.StyleContext.add_provider_for_display(display, css_provider, Gtk.STYLE_PROVIDER_PRIORITY_USER + 1);
 
-        foreach (var monitor in monitors) present_monitor(monitor);
+        foreach (var monitor in monitors) present_bar(monitor);
+        launcher_menu = new Dotpanel.LauncherMenu();
+        add_window(launcher_menu);
 
         var monitors = display.get_monitors();
         display.get_monitors().items_changed.connect((position, removed, added) => {
@@ -31,20 +39,20 @@ class Dotpanel.Application : Astal.Application {
                 display.sync();
                 for (var i = 0; i < added; i++) {
                     var monitor = monitors.get_item(position + i);
-                    if (monitor != null) present_monitor((Gdk.Monitor) monitor);
+                    if (monitor != null) present_bar((Gdk.Monitor) monitor);
                 }
             }
         });
     }
 
-    private void present_monitor(Gdk.Monitor monitor) {
+    private void present_bar(Gdk.Monitor monitor) {
         var bar = new Dotpanel.Bar(monitor);
 
+        add_window(bar);
         bar.present();
     }
 
     construct {
         instance_name = "dotpanel";
-        instance = this;
     }
 }
