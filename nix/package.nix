@@ -32,7 +32,6 @@ stdenv.mkDerivation {
     vala
     wrapGAppsHook4
   ];
-
   buildInputs =
     [
       gtk4

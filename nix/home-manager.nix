@@ -1,4 +1,4 @@
-{ self }:
+{ self, ... }:
 {
   config,
   lib,
@@ -27,7 +27,7 @@ in
       };
 
       Service = {
-        ExecStart = "${lib.getExe cfg.package} --daemon";
+        ExecStart = lib.getExe cfg.package;
         Restart = "on-failure";
       };
 
