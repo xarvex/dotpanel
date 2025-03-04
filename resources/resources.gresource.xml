@@ -1,0 +1,8 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<gresources>
+    <gresource prefix="/com/xarvex/dotpanel">
+        <file>style.css</file>
+
+        <file compressed="true">icons/symbolic/apps/linux-nixos-symbolic.svg</file>
+    </gresource>
+</gresources>

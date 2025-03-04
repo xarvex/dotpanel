@@ -33,10 +33,11 @@ in
   };
 
   config = lib.mkIf cfg.enable {
-    home.packages = with cfg; [ package ];
-
-    xdg.configHome."dotpanel/config.toml".source = lib.mkIf (cfg.settings != { }) (
-      tomlFormat.generate "dotpanel-settings" cfg.settings
-    );
+    environment = {
+      systemPackages = with cfg; [ package ];
+      etc."dotpanel/config.toml".source = lib.mkIf (cfg.settings != { }) (
+        tomlFormat.generate "dotpanel-settings" cfg.settings
+      );
+    };
   };
 }

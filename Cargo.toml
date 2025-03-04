@@ -1,0 +1,22 @@
+[package]
+name = "dotpanel"
+version = "0.0.1"
+authors = ["Xarvex"]
+edition = "2021"
+rust-version = "1.74.1" # cargo-msrv on 2024-09-14
+
+description = "Rust"
+repository = "https://codeberg.org/xarvex/dotpanel"
+
+[dependencies]
+constcat = "0.6.0"
+gtk = { version = "0.9.6", package = "gtk4", features = ["blueprint", "v4_16"] }
+gtk-layer-shell = { version = "0.4.0", package = "gtk4-layer-shell" }
+
+[build-dependencies]
+glib-build-tools = "0.20.0"
+
+[profile.release]
+opt-level = 3
+strip = true
+lto = true

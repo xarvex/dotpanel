@@ -1,0 +1,15 @@
+using Gtk 4.0;
+
+template $DotpanelBar: ApplicationWindow {
+    styles [
+        "bar",
+    ]
+
+    CenterBox {
+        start-widget: Box {
+            $DotpanelHostBarModule {}
+        };
+
+        center-widget: $DotpanelWorkspaceBarModule {};
+    }
+}

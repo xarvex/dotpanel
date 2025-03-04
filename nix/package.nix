@@ -1,66 +1,43 @@
 {
-  dart-sass,
   gobject-introspection,
   gtk4,
   gtk4-layer-shell,
   lib,
-  libadwaita,
-  libportal-gtk4,
-  meson,
-  networkmanager,
-  ninja,
-  pkg-config,
-  stdenv,
-  system,
-  vala,
+  rustPlatform,
   wrapGAppsHook4,
-
-  astal,
+  blueprint-compiler,
+  dart-sass,
+  pkg-config,
 }:
 
-stdenv.mkDerivation {
-  name = "dotpanel";
-
-  src = ../.;
+let
+  manifest = (lib.importTOML ../Cargo.toml).package;
+in
+rustPlatform.buildRustPackage {
+  pname = manifest.name;
+  inherit (manifest) version;
 
   nativeBuildInputs = [
+    blueprint-compiler
     dart-sass
     gobject-introspection
-    meson
-    ninja
     pkg-config
-    vala
     wrapGAppsHook4
   ];
+  buildInputs = [
+    gtk4
+    gtk4-layer-shell
+  ];
 
-  buildInputs =
-    [
-      gtk4
-      gtk4-layer-shell
-      libadwaita
-      libportal-gtk4
-      networkmanager
-    ]
-    ++ (with astal.packages.${system}; [
-      astal4
-      apps
-      battery
-      bluetooth
-      hyprland
-      io
-      mpris
-      network
-      notifd
-      tray
-      wireplumber
-    ]);
+  src = ../.;
+  cargoLock.lockFile = ../Cargo.lock;
 
   meta = {
-    description = "dotpanel";
-    homepage = "https://codeberg.org/xarvex/dotpanel";
+    inherit (manifest) description;
+    homepage = manifest.repository;
     license = lib.licenses.mit;
     maintainers = with lib.maintainers; [ xarvex ];
-    mainProgram = "dotpanel";
+    mainProgram = manifest.name;
     platforms = lib.platforms.linux;
   };
 }
