@@ -10,6 +10,9 @@ let
 in
 pkgs.mkShell {
   nativeBuildInputs = with pkgs; [
+    uncrustify
+    vala-lint
+
     dart-sass
     gobject-introspection
     meson
@@ -25,9 +28,6 @@ pkgs.mkShell {
       libadwaita
       libportal-gtk4
       networkmanager
-
-      uncrustify
-      vala-lint
     ])
     ++ (with inputs.astal.packages.${pkgs.system}; [
       astal4
